@@ -5,26 +5,28 @@
 #include <unistd.h>
 
 int main() {
-  pid_t parentPid;
-  pid_t parentPpid;
-  pid_t childPid;
-  pid_t childPpid;
   if (signal(SIGCHLD, SIG_IGN) == SIG_ERR) {
     perror("signal");
     exit(EXIT_FAILURE);
   }
-  childPid = fork();
-  if (childPid == -1) {
+  int id = fork();
+  if (id == -1) {
     perror("fork");
     exit(EXIT_FAILURE);
   }
 
   while (1) {
-    parentPid = getpid();
-    parentPpid = getppid();
-    printf("[PARENT]: PID %jd, PPID %jd\n", (intmax_t)parentPid,
-           (intmax_t)parentPpid);
-    printf("[CHILD]: PID %jd, PPID %jd\n", (intmax_t)childPid,
-           (intmax_t)parentPid);
+    if (id == 0) {
+      int childPid = getpid();
+      int childPpid = getppid();
+      printf("[Child]: PID %jd, PPID %jd\n", (intmax_t)childPid,
+             (intmax_t)childPpid);
+
+    } else {
+      int parentPid = getpid();
+      int parentPpid = getppid();
+      printf("[Parent]: PID %jd, PPID %jd\n", (intmax_t)parentPid,
+             (intmax_t)parentPpid);
+    }
   }
 }

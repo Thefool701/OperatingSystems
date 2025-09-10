@@ -7,33 +7,32 @@
 
 int main() {
   char *args[] = {"./count", NULL};
-  pid_t parentPid;
-  pid_t childPid;
+  int parentPid;
+  int id;
   if (signal(SIGCHLD, SIG_IGN) == SIG_ERR) {
     perror("signal");
     exit(EXIT_FAILURE);
   }
-  childPid = fork();
-  if (childPid == -1) {
+  id = fork();
+  if (id == -1) {
     perror("fork");
     exit(EXIT_FAILURE);
   }
-  parentPid = getpid();
 
-  if (childPid != 0) {
+  if (id != 0) {
+    parentPid = getpid();
     printf("[PARENT]: PID %jd, wait for child with PID %jd\n",
-           (intmax_t)parentPid, (intmax_t)childPid);
+           (intmax_t)parentPid, (intmax_t)id);
     wait(NULL);
   }
 
-  if (childPid == 0) {
-    childPid = getppid();
-    printf("[CHILD]: PID %jd, starts counting: \n", (intmax_t)childPid);
+  if (id == 0) {
+    id = getpid();
+    printf("[CHILD]: PID %jd, starts counting: \n", (intmax_t)id);
     execvp(args[0], args);
   }
-  if (childPid != 0) {
-    printf("[PARENT]: Child with PID %jd finished and unloaded.",
-           (intmax_t)childPid);
+  if (id != 0) {
+    printf("[PARENT]: Child with PID %jd finished and unloaded.", (intmax_t)id);
   }
 
   exit(EXIT_SUCCESS);
