@@ -48,7 +48,7 @@ int main() {
     printf("\nEnter Destination File: ");
     scanf("%s", destName);
   } while (checkSourceFile(dest, destName) == 1);
-  dest = open(destName, O_WRONLY | O_WRONLY | O_TRUNC, 0644);
+  dest = open(destName, O_RDONLY | O_WRONLY | O_TRUNC, 0644);
 
   // Copy contents
   do {
