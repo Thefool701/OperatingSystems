@@ -46,7 +46,9 @@ int main() {
     stringLength = strlen(diffMsg);
     printf("Child(%jd): Recieved message\n", (intmax_t)childPid);
     printf("\n");
-    printf("Reversing the case of the string and sending to parent\n");
+    printf(
+        "Child(%jd): Reversing the case of the string and sending to Parent\n",
+        (intmax_t)childPid);
     printf("\n");
     reverseString(diffMsg, stringLength);
     if (write(p2[1], diffMsg, sizeof(diffMsg)) == -1) {
